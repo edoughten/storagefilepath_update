@@ -18,9 +18,9 @@ def get_sql_connection():
 
 def get_dataframe_from_sql(batch_size):
     connection = get_sql_connection()
-    query = """
+    query = f"""
 
-select top {batch_size} lower(CountyName) as CountyName, lower(StateAbbreviation) as StateAbbreviation, _CreatedDateTime, 
+select top {str(batch_size)} lower(CountyName) as CountyName, lower(StateAbbreviation) as StateAbbreviation, _CreatedDateTime, 
     r.sourceFilePath, r.storageFilePath, r.imageFileExists, r.recordID,
     '\\smb.dc2isilon.na.drillinginfo.com\county_scans_beta\cs_digital\' as base_path, left(r.recordID,4) as sub_directory
     from tblrecord r
@@ -28,6 +28,7 @@ select top {batch_size} lower(CountyName) as CountyName, lower(StateAbbreviation
     	left join tbllookupStates s on s.StateID = r.stateID
         left join dbo.temp_storagefilepath_null_updates n on r.recordID = n.recordID
     where sourceFilePath <> 'diml' and  isnull(r.storageFilePath,'') = '' and n.recordID is null"""
+
     df = pd.read_sql(query, connection)
     connection.close()
     return df

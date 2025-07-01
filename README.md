@@ -18,3 +18,5 @@ use the following command
 
 uv run --env-file .env --python python3 main.py
 ```
+
+to add interpreter using uv in pycharm, go to `Add New Interpreter` -> `Add Local Interpreter`, In `Type` dropdown select Type `uv` from the list, then path to the `uv` executable, which is usually located in your home `bin` directory (e.g., `~/.local/bin/uv`).
