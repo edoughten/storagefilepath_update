@@ -1,0 +1,17 @@
+[project]
+name = "storagefilepath-update"
+version = "0.1.0"
+description = "update missing storageFilePaths in cs_digital"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "dotenv==0.9.9",
+    "pandas==2.3.0",
+    "pyodbc==5.2.0",
+]
+[project.scripts]
+main = "storagefilepath_update:main"
+#main = "storagefilepath-update:main"
+#this entry point is not working
+
+
