@@ -38,7 +38,7 @@ def update_dataframe_with_storage_path(df):
 
     df['storageFilePath'] = df.apply(
         lambda row: '\\' +row['base_path'] + '\\' +  row['StateAbbreviation'] + '\\' + row['CountyName'] + '\\' + row[
-            'sub_directory'] + '\\' + row['recordID'] + '.pdf'
+            'sub_directory']
         if os.path.exists(os.path.join(local_path, row['StateAbbreviation'], row['CountyName'], row['sub_directory'],
                                        row['recordID'] + '.pdf'))
         else None,
@@ -88,7 +88,8 @@ def process_records(batch_size):
 
 
 if __name__ == "__main__":
-    batch_size = 1000000
+    # batch_size = 1000000
+    batch_size = 10
     start_time = pd.Timestamp.now()
     print(f"Process started at {start_time}, processing batch size: {batch_size}")
 

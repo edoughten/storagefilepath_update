@@ -2,7 +2,7 @@
 ### .env file example
 ```bash  
 
-DRIVER={ODBC Driver 17 for SQL Server}
+DRIVER={ODBC Driver 18 for SQL Server}
 CSDIGITAL_SERVER=AUS2-PHX-DSQL01.na.drillinginfo.com
 CSDIGITAL_DATABASE=CS_Digital
 CSDIGITAL_UID=cs_updates
@@ -20,3 +20,9 @@ uv run --env-file .env --python python3 main.py
 ```
 
 to add interpreter using uv in pycharm, go to `Add New Interpreter` -> `Add Local Interpreter`, In `Type` dropdown select Type `uv` from the list, then path to the `uv` executable, which is usually located in your home `bin` directory (e.g., `~/.local/bin/uv`).
+
+
+### to install packages
+```bash
+source /data/storagefilepath_update/.venv/bin/activate
+~/.local/bin/uv add boto3
