@@ -38,7 +38,7 @@ def update_dataframe_with_storage_path(df):
 
     df['storageFilePath'] = df.apply(
         lambda row: '\\' +row['base_path'] + '\\' +  row['StateAbbreviation'] + '\\' + row['CountyName'] + '\\' + row[
-            'sub_directory'] + '\\' + row['recordID'] + '.pdf'
+            'sub_directory']
         if os.path.exists(os.path.join(local_path, row['StateAbbreviation'], row['CountyName'], row['sub_directory'],
                                        row['recordID'] + '.pdf'))
         else None,
@@ -62,17 +62,23 @@ def save_dataframe_to_sql(df):
         rows = df[df['storageFilePath'].notnull()][['recordID', 'storageFilePath', 'imageFileExists']].values.tolist()
         no_update_rows = df[df['storageFilePath'].isnull()][['recordID', 'storageFilePath', 'imageFileExists']].values.tolist()
         cursor.fast_executemany = True
-        cursor.executemany("""INSERT INTO #temp_storagefilepath (recordID, storageFilePath, imageFileExists)
+        if rows:
+            cursor.executemany("""INSERT INTO #temp_storagefilepath (recordID, storageFilePath, imageFileExists)
                               VALUES (?, ?, ?)  """, rows)
-        cursor.executemany("""INSERT INTO temp_storagefilepath_null_updates (recordID, storageFilePath, imageFileExists)
+        if no_update_rows:
+            cursor.executemany("""INSERT INTO temp_storagefilepath_null_updates (recordID, storageFilePath, imageFileExists)
                               VALUES (?, ?, ?)  """, no_update_rows)
         # Run batch update
         cursor.execute("""
+            disable trigger dbo.tr_tblrecord_PopulateCreatedModified on tblRecord;
             UPDATE r
             SET r.storageFilePath = t.storageFilePath,
-                r.imageFileExists = t.imageFileExists
+                r.imageFileExists = t.imageFileExists,
+                r._Modifiedby = 'LND-6916'
             FROM tblrecord r
-            INNER JOIN #temp_storagefilepath t ON r.recordID = t.recordID """)
+            INNER JOIN #temp_storagefilepath t ON r.recordID = t.recordID;
+            enable trigger dbo.tr_tblrecord_PopulateCreatedModified on tblRecord;
+                       """)
         connection.commit()
     except:
         connection.rollback()
