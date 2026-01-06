@@ -26,3 +26,6 @@ to add interpreter using uv in pycharm, go to `Add New Interpreter` -> `Add Loca
 ```bash
 source /data/storagefilepath_update/.venv/bin/activate
 ~/.local/bin/uv add boto3
+```
+
+![image](https://github.com/user-attachments/assets/d34981b7-e70c-47f3-9440-74657f745e05)
